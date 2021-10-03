@@ -1,4 +1,6 @@
-# Maintainer: Natanael Copa <ncopa@alpinelinux.org>
+# Maintainer: Daniel Noland
+# This build script is basically lifted (with love and respect) from the official alpine sources maintained by
+# Natanael Copa <ncopa@alpinelinux.org>
 
 _flavor=edge
 pkgname=stateless-linux-${_flavor}

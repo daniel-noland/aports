@@ -1,0 +1,51 @@
+# Maintainer: Daniel Noland
+# This build script is basically lifted (with love and respect) from the official alpine sources maintained by
+# Natanael Copa <ncopa@alpinelinux.org>
+pkgname=linux-headers
+pkgver=5.14.9
+_kernver=${pkgver%.*}
+pkgrel=0
+pkgdesc="Stateless Linux system headers"
+url="http://kernel.org"
+arch="x86_64"
+license="GPL-2.0-only"
+makedepends="perl rsync"
+options="!check !dbg !strip !tracedeps"
+source="https://kernel.org/pub/linux/kernel/v5.x/linux-$_kernver.tar.xz
+	https://kernel.org/pub/linux/kernel/v5.x/patch-$pkgver.xz
+	revert-broken-uapi.patch
+	0003-remove-inclusion-of-sysinfo.h-in-kernel.h.patch
+	include-uapi-linux-swab-Fix-potentially-missing-__always_inline.patch
+	add-btf-float-uapi.patch
+	"
+builddir="$srcdir/linux-$_kernver"
+
+prepare() {
+	if [ "$_kernver" != "$pkgver" ]; then
+		unxz -c < "$srcdir"/patch-$pkgver.xz | patch -p1
+	fi
+	default_prepare
+}
+
+package() {
+	local _carch=$CARCH
+
+	case "$_carch" in
+	aarch64*) _carch="arm64" ;;
+	arm*) _carch="arm" ;;
+	mips*) _carch="mips" ;;
+	s390*) _carch="s390" ;;
+	ppc*) _carch="powerpc" ;;
+	riscv*) _carch="riscv" ;;
+# not sure about this --	ppc64*) _carch="powerpc64" ;;
+	esac
+
+	mkdir -p "$pkgdir/usr"
+	make headers_install ARCH="$_carch" INSTALL_HDR_PATH="$pkgdir/usr"
+
+	find "$pkgdir/usr" \( -name .install -o -name ..install.cmd \) -exec \
+		rm -f {} \;
+
+	# provided by libdrm
+	rm -rf "$pkgdir"/usr/include/drm
+}
