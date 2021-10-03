@@ -1,4 +1,4 @@
-# Maintainer: Daniel Noland
+# Maintainer: Daniel Noland <daniel.noland@gmail.com>
 # This build script is basically lifted (with love and respect) from the official alpine sources maintained by
 # Natanael Copa <ncopa@alpinelinux.org>
 pkgname=linux-headers
@@ -16,7 +16,6 @@ source="https://kernel.org/pub/linux/kernel/v5.x/linux-$_kernver.tar.xz
 	revert-broken-uapi.patch
 	0003-remove-inclusion-of-sysinfo.h-in-kernel.h.patch
 	include-uapi-linux-swab-Fix-potentially-missing-__always_inline.patch
-	add-btf-float-uapi.patch
 	"
 builddir="$srcdir/linux-$_kernver"
 
@@ -49,3 +48,10 @@ package() {
 	# provided by libdrm
 	rm -rf "$pkgdir"/usr/include/drm
 }
+sha512sums="
+8e4f3ec3d36f774280f75dc7b004a43e09417af58f12e9c9f8348976659d4cfda7ad905f306f43fed66a27922e5c45db22e46bbfa7a0b9f365012380de3b6f64  linux-5.14.tar.xz
+a8f4619d6ed6be2daae9a32da0d0bb67e170490a320acdefc8b344beebf32893026ef309f729405ed325078b5b1e34d8d7b94b23ccbadbdb8869536747f3c4dc  patch-5.14.9.xz
+32597f2672d1ec365a936d15041a7cf219ef9353241d4a5c378244cf2fc155610443a19bbcd391c86099a0b08486c45e042ec7c90b0d04fe675c3ad0ffc36b53  revert-broken-uapi.patch
+607c074d72aca88fea9ecdbd62198d8f7857daca75e5d027966e0a9997338d6ac8ce0a1e9114b19232b390751d05acca09e28b0cfad2a12d5942f5575a9f4684  0003-remove-inclusion-of-sysinfo.h-in-kernel.h.patch
+7cfa786144009c52d682e307bb512156e4812d7abe03b3fed99651a02d80567d47ee6f347f88d083c1b9805e0c09625fc3df08a8d0ae96b169d24eb5b83917b7  include-uapi-linux-swab-Fix-potentially-missing-__always_inline.patch
+"
